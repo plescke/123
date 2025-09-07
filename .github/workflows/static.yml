@@ -31,7 +31,7 @@ jobs:
       - name: Deploy `out/` to Cloudflare Pages (Direct Upload via wrangler)
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: "5b5fd7c67e9b83ade167f3c6edd0f20e10a9e"
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy out --project-name=YOUR_PROJECT_NAME
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
