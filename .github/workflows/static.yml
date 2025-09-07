@@ -20,7 +20,7 @@ jobs:
 
       - name: Run fetch script (generate out/prices.json)
         env:
-          API_KEY: ${{ secrets.API_KEY }}
+          API_KEY: 8R4voOJHFLcxte3GhBMNKjSmkpQRO7k8bsR6TypaOS5O-cKdzK
         run: |
           node fetch-prices.js
 
@@ -39,4 +39,4 @@ jobs:
         run: |
           wrangler pages deploy out --project-name=prices --account-id $account_id
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_API_TOKEN: g2BYl5ITc3A02lnRQj0kFFUl1Zwbl713UxE_A47i
