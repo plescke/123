@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Ceny skinów</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background: #333; color: white; }
+    tr:nth-child(even) { background: #f9f9f9; }
+  </style>
+</head>
+<body>
+  <h1>Ceny skinów</h1>
+  <table id="pricesTable">
+    <thead>
+      <tr>
+        <th>Nazwa</th>
+        <th>Cena (USD)</th>
+        <th>Ilość (count)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadPrices() {
+      const response = await fetch("prices.json"); // pobiera aktualny plik z repo
+      const data = await response.json();
+
+      const tbody = document.querySelector("#pricesTable tbody");
+      tbody.innerHTML = "";
+
+      for (const [name, item] of Object.entries(data.items)) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${name}</td>
+          <td>${item.price.toFixed(2)}</td>
+          <td>${item.count}</td>
+        `;
+        tbody.appendChild(row);
+      }
+    }
+
+    loadPrices();
+  </script>
+</body>
+</html>
