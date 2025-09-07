@@ -1,6 +1,6 @@
-import fs from "fs";
+const fs = require("fs");
 
-const url = "https://skins-table.com/api_v2/items?apikey=8R4voOJHFLcxte3GhBMNKjSmkpQRO7k8bsR6TypaOS5O-cKdzK&app=730&site=YOUPIN898";
+const url = "https://skins-table.com/api_v2/items?apikey=...";
 
 async function getData() {
   try {
@@ -21,7 +21,6 @@ async function getData() {
       throw new Error("Nieprawidłowa struktura odpowiedzi API – brak pola 'items'");
     }
 
-    // tworzymy nową strukturę: tylko price i count, z podwójnym filtrowaniem
     const transformedItems = {};
     for (const [key, value] of Object.entries(data.items)) {
       if (value.c > 12 && value.p >= 70) {
@@ -34,7 +33,6 @@ async function getData() {
 
     const result = { items: transformedItems };
 
-    // zapis do pliku JSON
     fs.writeFileSync("prices.json", JSON.stringify(result, null, 2), "utf8");
 
     console.log(`Zapisano ${Object.keys(transformedItems).length} przedmiotów do prices.json`);
