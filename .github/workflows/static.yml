@@ -2,7 +2,7 @@ name: Fetch & Deploy Prices to Cloudflare Pages
 
 on:
   schedule:
-    - cron: "0 * * * *"   # co godzinę
+   #- cron: "0 * * * *"   # co godzinę
   workflow_dispatch:
 
 jobs:
