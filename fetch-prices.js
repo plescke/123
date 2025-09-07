@@ -1,7 +1,7 @@
 // fetch-prices.js
 const fs = require("fs");
 
-const apiKey = process.env.API_KEY;
+const apiKey = "8R4voOJHFLcxte3GhBMNKjSmkpQRO7k8bsR6TypaOS5O-cKdzK";
 if (!apiKey) {
   console.error("Missing API_KEY env var");
   process.exit(1);
