@@ -1,43 +1,53 @@
+// fetch-prices.js
 const fs = require("fs");
 
-const url = "https://skins-table.com/api_v2/items?apikey=...";
+const apiKey = process.env.API_KEY;
+if (!apiKey) {
+  console.error("Missing API_KEY env var");
+  process.exit(1);
+}
+
+const url = `https://skins-table.com/api_v2/items?apikey=${apiKey}&app=730&site=YOUPIN898`;
 
 async function getData() {
   try {
-    const response = await fetch(url, {
+    const res = await fetch(url, {
       headers: {
         "accept": "application/json",
-        "accept-language": "pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7",
         "Referer": "https://skins-table.com/api_v2/apidoc/"
-      },
-      method: "GET"
+      }
     });
 
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const data = await response.json();
-
-    if (!data.items || typeof data.items !== "object") {
-      throw new Error("Nieprawidłowa struktura odpowiedzi API – brak pola 'items'");
+    const text = await res.text();
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status} - ${text}`);
     }
 
-    const transformedItems = {};
-    for (const [key, value] of Object.entries(data.items)) {
-      if (value.c > 12 && value.p >= 70) {
-        transformedItems[key] = {
-          price: value.p,
-          count: value.c
-        };
+    const data = JSON.parse(text);
+
+    if (!data.items || typeof data.items !== "object") {
+      throw new Error("Invalid API response: missing 'items'");
+    }
+
+    const transformed = {};
+    for (const [key, val] of Object.entries(data.items)) {
+      // warunki: count > 12 i price >= 70
+      if (typeof val.c === "number" && typeof val.p === "number" && val.c > 12 && val.p >= 70) {
+        transformed[key] = { price: val.p, count: val.c };
       }
     }
 
-    const result = { items: transformedItems };
+    const outDir = "out";
+    if (!fs.existsSync(outDir)) fs.mkdirSync(outDir);
 
-    fs.writeFileSync("prices.json", JSON.stringify(result, null, 2), "utf8");
+    const payload = { items: transformed };
+    fs.writeFileSync("prices.json", JSON.stringify(payload, null, 2), "utf8");
+    fs.writeFileSync(`${outDir}/prices.json`, JSON.stringify(payload, null, 2), "utf8");
 
-    console.log(`Zapisano ${Object.keys(transformedItems).length} przedmiotów do prices.json`);
-  } catch (error) {
-    console.error("Error:", error);
+    console.log(`Saved ${Object.keys(transformed).length} items -> ${outDir}/prices.json`);
+  } catch (err) {
+    console.error("Error:", err);
+    process.exit(1);
   }
 }
 
